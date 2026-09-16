@@ -23,7 +23,7 @@ button{font:inherit;cursor:pointer}
 .inner{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
 .card.flipped .inner,.card.matched .inner{transform:rotateY(180deg)}
 .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:15px;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 12px #0002}
-.back{background:repeating-linear-gradient(45deg,#6e4b35 0 8px,#825d42 8px 16px);border:4px solid #d7bb91;color:#f7ead7;font-size:34px}
+.back{background:#fff;border:0;overflow:hidden}.face img{width:100%;height:100%;object-fit:cover;border-radius:12px}.front{overflow:hidden}
 .front{transform:rotateY(180deg);background:#fffaf0;border:3px solid #b88f61;flex-direction:column;font-size:clamp(35px,8vw,65px)}
 .front span{font-size:12px;margin-top:4px;color:#7a614d;font-weight:700}
 #message{text-align:center;min-height:34px;margin:18px 0 0;font-size:18px;font-weight:700}
@@ -106,7 +106,7 @@ function init(l=level){
   deck.forEach((item,i)=>{
     const btn=document.createElement("button");
     btn.className="card"; btn.dataset.id=item.id;
-    btn.innerHTML=`<div class="inner"><div class="face back">?</div><div class="face front">${item.icon}<span>${item.name}</span></div></div>`;
+    btn.innerHTML=`<div class="inner"><div class="face back"><img src="images/card/封面.png" alt="牌卡封面"></div><div class="face front"><img src="images/card/背面.png" alt="${item.name}"><span>${item.name}</span></div></div>`;
     btn.addEventListener("click",()=>flip(btn));
     board.appendChild(btn);
   });
