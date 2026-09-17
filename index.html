@@ -271,73 +271,127 @@ function shuffle(array) {
 
 function createDeck(pairCount) {
 
-  // -------------------------------
-  // Step 1
-  // 先把「文物種類」打亂
-  // -------------------------------
-
-  const shuffledArtifacts = shuffle(artifacts);
-
-
-  // -------------------------------
-  // Step 2
-  // 抽出指定數量的不同種類
+  // ==========================================
+  // Step 1：先依「文物種類 name」去重
+  // ==========================================
   //
-  // 例如第四關：
-  // pairCount = 8
+  // 就算 artifacts 裡面有：
   //
-  // 就只會抽 8 個不同種類
-  // -------------------------------
+  // 陶罐
+  // 陶罐
+  //
+  // 也只會保留一個陶罐種類
+  //
+
+  const uniqueArtifacts = [];
+
+  const usedNames = new Set();
+
+  artifacts.forEach(artifact => {
+
+    if (!usedNames.has(artifact.name)) {
+
+      usedNames.add(artifact.name);
+
+      uniqueArtifacts.push(artifact);
+
+    }
+
+  });
+
+
+  // ==========================================
+  // Step 2：隨機打亂「種類」
+  // ==========================================
+
+  const shuffledArtifacts =
+    shuffle(uniqueArtifacts);
+
+
+  // ==========================================
+  // Step 3：先抽出不同的種類
+  // ==========================================
+  //
+  // 例如第四關需要 8 組
+  //
+  // 就先抽：
+  //
+  // 石刀
+  // 陶罐
+  // 玉玦
+  // 網墜
+  // ...
+  //
+  // 每個種類最多一次
+  //
 
   const selectedArtifacts =
     shuffledArtifacts.slice(0, pairCount);
 
 
-  // -------------------------------
-  // Step 3
-  // 每個種類內再隨機抽一張圖片
-  // -------------------------------
+  // ==========================================
+  // Step 4：每個種類裡面「只抽一張圖片」
+  // ==========================================
 
-  const selectedImages = selectedArtifacts.map((artifact, index) => {
+  const selectedImages = selectedArtifacts.map(
+    (artifact, index) => {
 
-    const randomImage =
-      artifact.images[
-        Math.floor(Math.random() * artifact.images.length)
-      ];
+      const randomIndex =
+        Math.floor(
+          Math.random() * artifact.images.length
+        );
 
-
-    return {
-      id: index,
-      name: artifact.name,
-      image: randomImage
-    };
-
-  });
+      const selectedImage =
+        artifact.images[randomIndex];
 
 
-  // -------------------------------
-  // Step 4
-  // 每張圖片建立兩張完全相同的牌
+      return {
+        id: index,
+
+        // 文物種類
+        name: artifact.name,
+
+        // 該種類抽中的「單一圖片」
+        image: selectedImage
+      };
+
+    }
+  );
+
+
+  // ==========================================
+  // Step 5：每張圖片複製成一對
+  // ==========================================
   //
-  // 例如：
+  // 例如抽到：
   //
-  // 石刀(2)
-  // 石刀(2)
+  // 陶罐(2)
   //
-  // 才是一組
-  // -------------------------------
+  // 就一定是：
+  //
+  // 陶罐(2)
+  // 陶罐(2)
+  //
+  // 不會是：
+  //
+  // 陶罐(1)
+  // 陶罐(2)
+  //
 
   const deck = [];
 
 
   selectedImages.forEach(item => {
 
+    // 第一張
     deck.push({
       id: item.id,
       name: item.name,
       image: item.image
     });
 
+
+    // 第二張
     deck.push({
       id: item.id,
       name: item.name,
@@ -347,10 +401,9 @@ function createDeck(pairCount) {
   });
 
 
-  // -------------------------------
-  // Step 5
-  // 最後把所有牌重新洗牌
-  // -------------------------------
+  // ==========================================
+  // Step 6：最後才把所有牌打亂
+  // ==========================================
 
   return shuffle(deck);
 }
