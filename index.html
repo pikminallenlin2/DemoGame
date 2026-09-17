@@ -79,260 +79,420 @@ button{font:inherit;cursor:pointer}
 </div>
 
 <script>
-const artifactImages = [
-  "images/card/front/牌卡-帶流口陶缽(1).png",
-  "images/card/front/牌卡-帶流口陶缽(2).png",
-  "images/card/front/牌卡-帶流口陶缽(3).png",
-
-  "images/card/front/牌卡-玉玦(1).png",
-
-  "images/card/front/牌卡-玉環(1).png",
-  "images/card/front/牌卡-玉環(2).png",
-
-  "images/card/front/牌卡-玉錛(1).png",
-  "images/card/front/牌卡-玉錛(2).png",
-
-  "images/card/front/牌卡-石刀(1).png",
-  "images/card/front/牌卡-石刀(2).png",
-  "images/card/front/牌卡-石刀(3).png",
-
-  "images/card/front/牌卡-石斧(1).png",
-  "images/card/front/牌卡-石斧(2).png",
-
-  "images/card/front/牌卡-網墜(1).png",
-  "images/card/front/牌卡-網墜(2).png",
-  "images/card/front/牌卡-網墜(3).png",
-  "images/card/front/牌卡-網墜(4).png",
-
-  "images/card/front/牌卡-陶罐(1).png",
-  "images/card/front/牌卡-陶罐(2).png",
-  "images/card/front/牌卡-陶罐(3).png"
+const artifacts = [
+  {
+    name: "帶流口陶缽",
+    images: [
+      "images/card/front/牌卡-帶流口陶缽(1).png",
+      "images/card/front/牌卡-帶流口陶缽(2).png",
+      "images/card/front/牌卡-帶流口陶缽(3).png"
+    ]
+  },
+  {
+    name: "玉玦",
+    images: [
+      "images/card/front/牌卡-玉玦(1).png",
+      "images/card/front/牌卡-玉玦(2).png",
+      "images/card/front/牌卡-玉玦(3).png"
+    ]
+  },
+  {
+    name: "玉環",
+    images: [
+      "images/card/front/牌卡-玉環(1).png",
+      "images/card/front/牌卡-玉環(2).png"
+    ]
+  },
+  {
+    name: "玉錛",
+    images: [
+      "images/card/front/牌卡-玉錛(1).png",
+      "images/card/front/牌卡-玉錛(2).png"
+    ]
+  },
+  {
+    name: "矛鏃形器",
+    images: [
+      "images/card/front/牌卡-矛鏃形器(1).png",
+      "images/card/front/牌卡-矛鏃形器(2).png",
+      "images/card/front/牌卡-矛鏃形器(3).png"
+    ]
+  },
+  {
+    name: "石刀",
+    images: [
+      "images/card/front/牌卡-石刀(1).png",
+      "images/card/front/牌卡-石刀(2).png",
+      "images/card/front/牌卡-石刀(3).png"
+    ]
+  },
+  {
+    name: "石斧",
+    images: [
+      "images/card/front/牌卡-石斧(1).png",
+      "images/card/front/牌卡-石斧(2).png"
+    ]
+  },
+  {
+    name: "石矛",
+    images: [
+      "images/card/front/牌卡-石矛(1).png"
+    ]
+  },
+  {
+    name: "石鏃",
+    images: [
+      "images/card/front/牌卡-石鏃(1).png"
+    ]
+  },
+  {
+    name: "網墜",
+    images: [
+      "images/card/front/牌卡-網墜(1).png",
+      "images/card/front/牌卡-網墜(2).png",
+      "images/card/front/牌卡-網墜(3).png",
+      "images/card/front/牌卡-網墜(4).png",
+      "images/card/front/牌卡-網墜(5).png"
+    ]
+  },
+  {
+    name: "錛鑿形器",
+    images: [
+      "images/card/front/牌卡-錛鑿形器(1).png",
+      "images/card/front/牌卡-錛鑿形器(2).png",
+      "images/card/front/牌卡-錛鑿形器(3).png"
+    ]
+  },
+  {
+    name: "陶罐",
+    images: [
+      "images/card/front/牌卡-陶罐(1).png",
+      "images/card/front/牌卡-陶罐(2).png",
+      "images/card/front/牌卡-陶罐(3).png"
+    ]
+  }
 ];
 
-const configs = {
-  1: { count: 6, cols: 3 },
-  2: { count: 8, cols: 4 },
-  3: { count: 12, cols: 4 },
-  4: { count: 16, cols: 4 }
+
+// ===============================
+// 遊戲設定
+// ===============================
+
+const levelConfig = {
+  1: {
+    cards: 6,
+    pairs: 3,
+    columns: 3
+  },
+  2: {
+    cards: 8,
+    pairs: 4,
+    columns: 4
+  },
+  3: {
+    cards: 12,
+    pairs: 6,
+    columns: 4
+  },
+  4: {
+    cards: 16,
+    pairs: 8,
+    columns: 4
+  }
 };
 
-let level = 1;
-let first = null;
-let second = null;
-let lock = false;
 
-let moves = 0;
-let pairs = 0;
-let seconds = 0;
-let timer = null;
+// ===============================
+// DOM
+// ===============================
 
 const board = document.getElementById("board");
-
 const timeEl = document.getElementById("time");
 const movesEl = document.getElementById("moves");
 const pairsEl = document.getElementById("pairs");
 const totalEl = document.getElementById("total");
+const messageEl = document.getElementById("message");
 
-const message = document.getElementById("message");
+const restartBtn = document.getElementById("restart");
+const levelButtons = document.querySelectorAll(".level");
+
 const overlay = document.getElementById("overlay");
-const result = document.getElementById("result");
+const resultEl = document.getElementById("result");
 const nextBtn = document.getElementById("next");
 
 
-// ================================
-// 隨機洗牌
-// ================================
+// ===============================
+// 遊戲狀態
+// ===============================
+
+let currentLevel = 1;
+
+let firstCard = null;
+let secondCard = null;
+
+let lockBoard = false;
+
+let moves = 0;
+let matchedPairs = 0;
+
+let seconds = 0;
+let timer = null;
+
+let gameStarted = false;
+
+
+// ===============================
+// 隨機排序
+// Fisher-Yates Shuffle
+// ===============================
+
 function shuffle(array) {
+  const arr = [...array];
 
-  for (let i = array.length - 1; i > 0; i--) {
-
+  for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
 
-    [array[i], array[j]] = [array[j], array[i]];
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
 
-  return array;
+  return arr;
 }
 
 
-// ================================
-// 開始計時
-// ================================
-function startTimer() {
+// ===============================
+// 建立牌組
+//
+// 規則：
+// 1. 先抽「種類」
+// 2. 每個種類最多一次
+// 3. 再從該種類內抽一張圖片
+// 4. 該圖片複製成一對
+// ===============================
 
-  clearInterval(timer);
+function createDeck(pairCount) {
 
-  timer = setInterval(() => {
+  // -------------------------------
+  // Step 1
+  // 先把「文物種類」打亂
+  // -------------------------------
 
-    seconds++;
-
-    timeEl.textContent = seconds;
-
-  }, 1000);
-}
-
-
-// ================================
-// 建立遊戲
-// ================================
-function init(l = level) {
-
-  level = l;
-
-  first = null;
-  second = null;
-  lock = false;
-
-  moves = 0;
-  pairs = 0;
-  seconds = 0;
-
-  clearInterval(timer);
-
-  const config = configs[level];
-
-  // 本關需要幾組
-  const pairCount = config.count / 2;
+  const shuffledArtifacts = shuffle(artifacts);
 
 
-  // --------------------------------
-  // 從所有圖片中隨機抽出需要的圖片
-  // --------------------------------
+  // -------------------------------
+  // Step 2
+  // 抽出指定數量的不同種類
+  //
+  // 例如第四關：
+  // pairCount = 8
+  //
+  // 就只會抽 8 個不同種類
+  // -------------------------------
 
-  const selectedImages = shuffle([
-    ...artifactImages
-  ]).slice(0, pairCount);
+  const selectedArtifacts =
+    shuffledArtifacts.slice(0, pairCount);
 
 
-  // --------------------------------
-  // 每一張圖片複製兩張
+  // -------------------------------
+  // Step 3
+  // 每個種類內再隨機抽一張圖片
+  // -------------------------------
+
+  const selectedImages = selectedArtifacts.map((artifact, index) => {
+
+    const randomImage =
+      artifact.images[
+        Math.floor(Math.random() * artifact.images.length)
+      ];
+
+
+    return {
+      id: index,
+      name: artifact.name,
+      image: randomImage
+    };
+
+  });
+
+
+  // -------------------------------
+  // Step 4
+  // 每張圖片建立兩張完全相同的牌
   //
   // 例如：
   //
-  // 石刀(1)
-  // 石刀(1)
+  // 石刀(2)
+  // 石刀(2)
   //
-  // 才是同一組
-  // --------------------------------
+  // 才是一組
+  // -------------------------------
 
   const deck = [];
 
-  selectedImages.forEach((image, index) => {
+
+  selectedImages.forEach(item => {
 
     deck.push({
-      id: index,
-      image: image
+      id: item.id,
+      name: item.name,
+      image: item.image
     });
 
     deck.push({
-      id: index,
-      image: image
+      id: item.id,
+      name: item.name,
+      image: item.image
     });
 
   });
 
 
-  // 將牌卡重新洗牌
-  shuffle(deck);
+  // -------------------------------
+  // Step 5
+  // 最後把所有牌重新洗牌
+  // -------------------------------
+
+  return shuffle(deck);
+}
+
+
+// ===============================
+// 建立牌卡 HTML
+// ===============================
+
+function createCard(item) {
+
+  const card = document.createElement("button");
+
+  card.className = "card";
+
+  // 用 id 判斷配對
+  card.dataset.id = item.id;
+
+  card.dataset.name = item.name;
+
+  card.innerHTML = `
+    <div class="inner">
+
+      <div class="face back">
+        <img
+          src="images/card/背面.png"
+          alt="牌卡背面"
+        >
+      </div>
+
+      <div class="face front">
+        <img
+          src="${item.image}"
+          alt="${item.name}"
+        >
+      </div>
+
+    </div>
+  `;
+
+
+  card.addEventListener("click", () => {
+
+    flipCard(card);
+
+  });
+
+
+  return card;
+}
+
+
+// ===============================
+// 開始遊戲
+// ===============================
+
+function startGame(level = currentLevel) {
+
+  currentLevel = level;
+
+  const config = levelConfig[currentLevel];
+
+
+  // 重置狀態
+  firstCard = null;
+  secondCard = null;
+
+  lockBoard = false;
+
+  moves = 0;
+  matchedPairs = 0;
+
+  seconds = 0;
+
+  gameStarted = false;
+
+
+  // 停止舊計時器
+  stopTimer();
+
+
+  // 更新 UI
+  timeEl.textContent = "0";
+  movesEl.textContent = "0";
+  pairsEl.textContent = "0";
+  totalEl.textContent = config.pairs;
+
+  messageEl.textContent =
+    "記住牌卡位置，開始配對吧！";
+
+
+  // 關閉成功視窗
+  overlay.style.display = "none";
+
+
+  // 清空牌桌
+  board.innerHTML = "";
 
 
   // 設定欄數
   board.style.gridTemplateColumns =
-    `repeat(${config.cols}, 1fr)`;
+    `repeat(${config.columns}, 1fr)`;
 
 
-  // 清空舊牌卡
-  board.innerHTML = "";
+  // 建立牌組
+  const deck = createDeck(config.pairs);
 
 
-  // --------------------------------
-  // 建立牌卡
-  // --------------------------------
+  // 放入牌桌
+  deck.forEach(item => {
 
-  deck.forEach((item) => {
-
-    const card = document.createElement("button");
-
-    card.className = "card";
-
-    // 用 id 判斷配對
-    card.dataset.id = item.id;
-
-
-    card.innerHTML = `
-      <div class="inner">
-
-        <!-- 蓋起來 -->
-        <div class="face back">
-          <img
-            src="images/card/背面.png"
-            alt="牌卡背面"
-          >
-        </div>
-
-
-        <!-- 翻開 -->
-        <div class="face front">
-          <img
-            src="${item.image}"
-            alt="文物"
-          >
-        </div>
-
-      </div>
-    `;
-
-
-    card.addEventListener("click", () => {
-
-      flip(card);
-
-    });
-
+    const card = createCard(item);
 
     board.appendChild(card);
 
   });
 
 
-  // 更新畫面
-  totalEl.textContent = pairCount;
+  // 更新 Level 按鈕
+  levelButtons.forEach(button => {
 
-  pairsEl.textContent = 0;
+    const buttonLevel =
+      Number(button.dataset.level);
 
-  movesEl.textContent = 0;
+    button.classList.toggle(
+      "active",
+      buttonLevel === currentLevel
+    );
 
-  timeEl.textContent = 0;
+  });
 
-  message.textContent =
-    "記住牌卡位置，開始配對吧！";
-
-
-  // 更新目前關卡
-  document
-    .querySelectorAll(".level")
-    .forEach(button => {
-
-      button.classList.toggle(
-        "active",
-        Number(button.dataset.level) === level
-      );
-
-    });
-
-
-  // 開始計時
-  startTimer();
 }
 
 
-// ================================
+// ===============================
 // 翻牌
-// ================================
-function flip(card) {
+// ===============================
+
+function flipCard(card) {
 
   // 鎖定時不能操作
-  if (lock) {
+  if (lockBoard) {
     return;
   }
 
@@ -349,207 +509,311 @@ function flip(card) {
   }
 
 
-  // 翻開
-  card.classList.add("flipped");
+  // 第一次翻牌
+  if (!firstCard) {
+
+    firstCard = card;
+
+    card.classList.add("flipped");
 
 
-  // 第一張牌
-  if (!first) {
+    // 第一次操作才開始計時
+    if (!gameStarted) {
 
-    first = card;
+      gameStarted = true;
+
+      startTimer();
+
+    }
+
 
     return;
   }
 
 
-  // 第二張牌
-  second = card;
+  // 第二次翻牌
+  secondCard = card;
 
+  card.classList.add("flipped");
+
+
+  // 步數 +1
   moves++;
 
   movesEl.textContent = moves;
 
-  lock = true;
+
+  // 暫停操作
+  lockBoard = true;
 
 
-  // ==================================
-  // 判斷是否完全相同
-  // ==================================
-  //
-  // id 相同代表：
-  //
-  // 石刀(1)
-  // 石刀(1)
-  //
-  // 才是同一組
-  //
-  // 石刀(1)
-  // 石刀(2)
-  //
-  // id 不同，因此配對失敗
-  // ==================================
+  // 檢查是否配對
+  checkMatch();
 
-  if (first.dataset.id === second.dataset.id) {
-
-    // 配對成功
-
-    first.classList.add("matched");
-
-    second.classList.add("matched");
-
-
-    pairs++;
-
-    pairsEl.textContent = pairs;
-
-
-    message.textContent =
-      "✨ 配對成功！繼續尋找下一組。";
-
-
-    first = null;
-    second = null;
-
-    lock = false;
-
-
-    // 全部完成
-    if (pairs === configs[level].count / 2) {
-
-      win();
-
-    }
-
-  }
-
-  else {
-
-    // 配對失敗
-
-    message.textContent =
-      "❌ 不是相同的文物圖片，再試一次！";
-
-
-    // 等待 0.8 秒後翻回去
-    setTimeout(() => {
-
-      first.classList.remove("flipped");
-
-      second.classList.remove("flipped");
-
-
-      first = null;
-
-      second = null;
-
-      lock = false;
-
-
-      message.textContent =
-        "換你找下一組！";
-
-    }, 800);
-
-  }
 }
 
 
-// ================================
-// 通關
-// ================================
-function win() {
+// ===============================
+// 判斷配對
+// ===============================
 
-  clearInterval(timer);
+function checkMatch() {
+
+  /*
+   * 非常重要：
+   *
+   * dataset.id 相同
+   * 才算配對成功。
+   *
+   * 因為 createDeck() 裡：
+   *
+   * 同一張圖片會得到相同 id
+   *
+   * 例如：
+   *
+   * 石刀(1) → id = 0
+   * 石刀(1) → id = 0
+   *
+   * 成功
+   *
+   * 但：
+   *
+   * 石刀(1) → id = 0
+   * 石刀(2) → id = 1
+   *
+   * 失敗
+   */
 
 
-  // 分數
-  const score = Math.max(
-    1000
-    - (level * 100)
-    - (seconds * 3)
-    - (moves * 10),
-    100
-  );
+  const isMatch =
+    firstCard.dataset.id ===
+    secondCard.dataset.id;
 
 
-  result.textContent =
-    `第 ${level} 關完成！用了 ${seconds} 秒、${moves} 步，獲得 ${score} 分。`;
+  if (isMatch) {
+
+    handleMatch();
+
+  } else {
+
+    handleMismatch();
+
+  }
+
+}
 
 
-  if (level < 4) {
+// ===============================
+// 配對成功
+// ===============================
+
+function handleMatch() {
+
+  firstCard.classList.add("matched");
+  secondCard.classList.add("matched");
+
+
+  matchedPairs++;
+
+  pairsEl.textContent = matchedPairs;
+
+
+  messageEl.textContent =
+    "🎉 配對成功！";
+
+
+  resetTurn();
+
+
+  // 判斷是否全部完成
+  const totalPairs =
+    levelConfig[currentLevel].pairs;
+
+
+  if (matchedPairs === totalPairs) {
+
+    gameComplete();
+
+  }
+
+}
+
+
+// ===============================
+// 配對失敗
+// ===============================
+
+function handleMismatch() {
+
+  messageEl.textContent =
+    "❌ 不一樣，再試一次！";
+
+
+  setTimeout(() => {
+
+    firstCard.classList.remove("flipped");
+    secondCard.classList.remove("flipped");
+
+
+    resetTurn();
+
+    messageEl.textContent =
+      "記住牌卡位置，繼續配對吧！";
+
+  }, 900);
+
+}
+
+
+// ===============================
+// 重置這一回合
+// ===============================
+
+function resetTurn() {
+
+  firstCard = null;
+  secondCard = null;
+
+  lockBoard = false;
+
+}
+
+
+// ===============================
+// 計時器
+// ===============================
+
+function startTimer() {
+
+  stopTimer();
+
+
+  timer = setInterval(() => {
+
+    seconds++;
+
+    timeEl.textContent = seconds;
+
+  }, 1000);
+
+}
+
+
+function stopTimer() {
+
+  if (timer !== null) {
+
+    clearInterval(timer);
+
+    timer = null;
+
+  }
+
+}
+
+
+// ===============================
+// 遊戲完成
+// ===============================
+
+function gameComplete() {
+
+  stopTimer();
+
+  lockBoard = true;
+
+
+  const totalPairs =
+    levelConfig[currentLevel].pairs;
+
+
+  resultEl.textContent =
+    `第 ${currentLevel} 關完成！` +
+    `\n共用了 ${moves} 步，` +
+    `花費 ${seconds} 秒完成 ${totalPairs} 組配對。`;
+
+
+  // 最後一關
+  if (currentLevel === 4) {
+
+    nextBtn.textContent = "重新挑戰";
+
+  } else {
 
     nextBtn.textContent = "下一關";
 
   }
-  else {
-
-    nextBtn.textContent = "重新挑戰";
-
-  }
 
 
-  overlay.style.display = "flex";
+  setTimeout(() => {
+
+    overlay.style.display = "flex";
+
+  }, 500);
+
 }
 
 
-// ================================
-// 重新開始
-// ================================
-document
-  .getElementById("restart")
-  .onclick = () => {
+// ===============================
+// Level 按鈕
+// ===============================
 
-    init(level);
+levelButtons.forEach(button => {
 
-  };
+  button.addEventListener("click", () => {
+
+    const level =
+      Number(button.dataset.level);
 
 
-// ================================
-// 點擊關卡
-// ================================
-document
-  .querySelectorAll(".level")
-  .forEach(button => {
+    if (!levelConfig[level]) {
+      return;
+    }
 
-    button.onclick = () => {
 
-      overlay.style.display = "none";
-
-      init(
-        Number(button.dataset.level)
-      );
-
-    };
+    startGame(level);
 
   });
 
+});
 
-// ================================
+
+// ===============================
+// 重新開始
+// ===============================
+
+restartBtn.addEventListener("click", () => {
+
+  startGame(currentLevel);
+
+});
+
+
+// ===============================
 // 下一關
-// ================================
-nextBtn.onclick = () => {
+// ===============================
 
-  overlay.style.display = "none";
+nextBtn.addEventListener("click", () => {
 
+  if (currentLevel < 4) {
 
-  if (level < 4) {
+    startGame(currentLevel + 1);
 
-    init(level + 1);
+  } else {
 
-  }
-  else {
-
-    init(1);
+    // 第四關完成後重新挑戰第四關
+    startGame(4);
 
   }
 
-};
+});
 
 
-// ================================
-// 開始第一關
-// ================================
-init(1);
+// ===============================
+// 第一次載入
+// ===============================
+
+startGame(1);
 </script>
 </body>
 </html>
