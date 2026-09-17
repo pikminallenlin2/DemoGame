@@ -106,7 +106,7 @@ function init(l=level){
   deck.forEach((item,i)=>{
     const btn=document.createElement("button");
     btn.className="card"; btn.dataset.id=item.id;
-    btn.innerHTML=`<div class="inner"><div class="face back"><img src="images/card/封面.png" alt="牌卡封面"></div><div class="face front"><img src="images/card/背面.png" alt="${item.name}"><span>${item.name}</span></div></div>`;
+    btn.innerHTML=`<div class="inner"><div class="face back"><img src="images/card/背面.png" alt="牌卡背面"></div><div class="face front"><img src="images/card/正面.png" alt="${item.name}"><span>${item.name}</span></div></div>`;
     btn.addEventListener("click",()=>flip(btn));
     board.appendChild(btn);
   });
